@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentina Iglesias — Diseñadora</title>
+<style>
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --w:   #ffffff;
+  --k:   #0a0a0a;
+  --g1:  #f2f2f2;
+  --g2:  #aaa;
+  --g3:  #666;
+  --nav: 58px;
+  --font: Arial, Helvetica, sans-serif;
+}
+
+html, body {
+  height:100%; overflow:hidden;
+  background:var(--w); color:var(--k);
+  font-family:var(--font);
+  cursor:none; -webkit-font-smoothing:antialiased;
+}
+
+/* CURSOR — pencil trail */
+#pencil-canvas {
+  position:fixed; inset:0; pointer-events:none; z-index:9997;
+}
+#c-dot {
+  position:fixed; width:6px; height:6px; background:var(--k);
+  border-radius:50%; pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%);
+}
+#c-ring { display:none; }
+
+/* NAV */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:500;
+  height:var(--nav);
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 3rem;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(0,0,0,.08);
+}
+.nav-logo {
+  font-size:.65rem; font-weight:700; letter-spacing:.2em;
+  text-transform:uppercase; text-decoration:none; color:var(--k); cursor:none;
+}
+.nav-links { display:flex; gap:2.5rem; list-style:none; }
+.nav-links a {
+  font-size:.6rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; text-decoration:none; color:var(--g2);
+  transition:color .2s; cursor:none;
+}
+.nav-links a.on { color:var(--k); }
+.nav-links a:hover { color:var(--k); }
+
+/* PAGES */
+.pages { position:fixed; top:var(--nav); left:0; right:0; bottom:0; }
+
+.page {
+  position:absolute; inset:0;
+  overflow-y:auto; overflow-x:hidden;
+  opacity:0; pointer-events:none;
+  transition:opacity .38s ease;
+  -webkit-overflow-scrolling:touch;
+}
+.page.active { opacity:1; pointer-events:all; }
+
+/* ══════════════════════════════
+   HOME — scroll effect
+══════════════════════════════ */
+.hero-zone { position:relative; height:200vh; }
+
+.hero-sticky {
+  position:sticky; top:0;
+  height:calc(100vh - var(--nav));
+  overflow:hidden; background:var(--w);
+}
+
+.hero-name-layer {
+  position:absolute; inset:0; z-index:1;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.hero-name-layer h1 {
+  font-size:clamp(3.5rem,12vw,15rem);
+  font-weight:700; line-height:.88;
+  letter-spacing:-.03em; text-transform:uppercase;
+  text-align:center; color:var(--k);
+}
+.hero-sub {
+  margin-top:1.4rem;
+  font-size:.6rem; font-weight:700; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--g2); text-align:center;
+}
+
+.hero-photo-layer {
+  position:absolute; inset:0; z-index:2;
+  display:flex; align-items:flex-end; justify-content:center;
+  transform:translateY(100%);
+}
+.hero-photo-layer img {
+  height:95%; width:auto; max-width:58vw;
+  object-fit:cover; display:block;
+  user-select:none; -webkit-user-drag:none;
+}
+
+.scroll-hint {
+  position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
+  z-index:3; display:flex; flex-direction:column; align-items:center; gap:.4rem;
+  animation:bob 2.5s ease-in-out infinite;
+}
+.scroll-hint span { font-size:.5rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--g2); }
+.scroll-line { width:1px; height:2.5rem; background:linear-gradient(to bottom,var(--k),transparent); }
+@keyframes bob {
+  0%,100% { opacity:.4; transform:translateX(-50%) translateY(0); }
+  50%      { opacity:.8; transform:translateX(-50%) translateY(-5px); }
+}
+
+/* ── TICKER ── */
+.ticker-wrap {
+  overflow:hidden; border-top:1px solid rgba(0,0,0,.1);
+  border-bottom:1px solid rgba(0,0,0,.1); padding:.85rem 0;
+}
+.ticker-track {
+  display:flex; gap:4rem; white-space:nowrap;
+  width:max-content; animation:ticker 20s linear infinite;
+}
+.ticker-item {
+  font-size:.7rem; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; flex-shrink:0; color:var(--k);
+}
+.ticker-sep { color:var(--g2); font-weight:400; }
+@keyframes ticker {
+  from { transform:translateX(0); }
+  to   { transform:translateX(-50%); }
+}
+
+/* ── CAROUSEL ── */
+.car-section { padding:7vh 0; border-bottom:1px solid rgba(0,0,0,.1); }
+.car-label {
+  text-align:center; font-size:.58rem; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--g2);
+  margin-bottom:2.5rem;
+}
+.car-viewport { position:relative; overflow:hidden; width:100%; }
+.car-track { display:flex; transition:transform .85s cubic-bezier(.77,0,.175,1); }
+.car-slide { min-width:100%; position:relative; }
+.car-slide img {
+  width:100%; height:72vh; object-fit:cover; display:block;
+  filter:grayscale(10%);
+}
+.car-caption {
+  padding:1.2rem 3rem; display:flex; justify-content:space-between; align-items:baseline;
+}
+.car-name {
+  font-size:clamp(.9rem,1.8vw,1.3rem); font-weight:700;
+  letter-spacing:-.01em; text-transform:uppercase;
+}
+.car-cat {
+  font-size:.58rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--g2);
+}
+.car-num {
+  font-size:.58rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--g2);
+}
+.car-clickable { position:relative; cursor:none; }
+
+/* cursor-following label */
+#car-cursor-lbl {
+  position:fixed; z-index:9998; pointer-events:none;
+  background:var(--k); color:var(--w);
+  font-size:.52rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  padding:.45rem .9rem;
+  opacity:0; transition:opacity .18s;
+  white-space:nowrap;
+}
+.car-dots {
+  display:flex; justify-content:center; gap:.4rem; margin-top:.5rem;
+}
+.car-dot {
+  width:5px; height:5px; border-radius:50%;
+  background:rgba(0,0,0,.18); cursor:none; transition:background .3s;
+}
+.car-dot.on { background:var(--k); }
+
+/* ── HOME AREAS ── */
+.home-areas { border-bottom:1px solid rgba(0,0,0,.1); }
+.home-areas-head {
+  padding:6vh 3rem 2rem;
+  display:flex; justify-content:space-between; align-items:baseline;
+  border-bottom:1px solid rgba(0,0,0,.1);
+}
+.home-areas-title {
+  font-size:clamp(2.5rem,6vw,7rem); font-weight:700;
+  letter-spacing:-.03em; text-transform:uppercase; line-height:.9;
+}
+.home-areas-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border-top:none;
+}
+.harea-col {
+  position:relative; overflow:hidden;
+  border-right:1px solid rgba(0,0,0,.1);
+  padding:4vh 3rem 4vh;
+  min-height:52vh;
+  display:flex; flex-direction:column; justify-content:space-between;
+  cursor:none; transition:background .3s, color .3s;
+}
+.harea-col:last-child { border-right:none; }
+.harea-col:hover { background:var(--k); }
+.harea-col:hover .harea-num,
+.harea-col:hover .harea-name,
+.harea-col:hover .harea-count { color:var(--w); }
+.harea-col:hover .harea-img { opacity:1; }
+.harea-col:hover .harea-arrow { opacity:1; }
+
+.harea-img {
+  position:absolute; inset:0; opacity:0; transition:opacity .4s;
+  z-index:0;
+}
+.harea-img img { width:100%; height:100%; object-fit:cover; display:block; mix-blend-mode:luminosity; }
+.harea-img-overlay { position:absolute; inset:0; background:rgba(0,0,0,.55); }
+
+.harea-top { position:relative; z-index:1; }
+.harea-bot { position:relative; z-index:1; }
+
+.harea-num {
+  font-size:.55rem; font-weight:700; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--g2); margin-bottom:1.2rem;
+  transition:color .3s;
+}
+.harea-name {
+  font-size:clamp(2rem,4.5vw,5.5rem); font-weight:700;
+  text-transform:uppercase; letter-spacing:-.03em; line-height:.9;
+  transition:color .3s;
+}
+.harea-count {
+  font-size:.55rem; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--g2); transition:color .3s;
+}
+.harea-arrow {
+  position:absolute; bottom:2rem; right:2rem; z-index:2;
+  font-size:1.5rem; opacity:0; color:var(--w);
+  transition:opacity .35s, transform .35s;
+  transform:translate(6px,6px);
+}
+.harea-col:hover .harea-arrow { transform:translate(0,0); }
+
+/* ── CTA ── */
+.home-cta {
+  display:flex; align-items:center; justify-content:center;
+  padding:8vh 3rem;
+}
+
+/* ── FOOTER ── */
+.site-footer {
+  width:100%; border-top:1px solid #e0e0e0;
+  padding:.9rem 3rem;
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:.6rem; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--k);
+}
+.site-footer .f-name { font-weight:700; }
+.site-footer .f-links { display:flex; gap:2rem; }
+.site-footer .f-links a {
+  color:var(--k); text-decoration:none;
+  transition:opacity .2s;
+}
+.site-footer .f-links a:hover { opacity:.45; }
+.site-footer .f-loc { color:var(--g2); letter-spacing:.08em; text-transform:none; font-size:.58rem; }
+.hero-btn {
+  font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  background:none; border:1.5px solid var(--k); padding:.8rem 2rem;
+  color:var(--k); cursor:none; transition:background .2s, color .2s;
+}
+.hero-btn:hover { background:var(--k); color:var(--w); }
+
+/* ══════════════════════════════
+   ABOUT
+══════════════════════════════ */
+#p-about {
+  padding:6vh 3rem 10vh;
+  display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-content:start;
+}
+.page-title {
+  grid-column:1/-1;
+  font-size:clamp(3rem,8vw,10rem); font-weight:700;
+  line-height:.88; text-transform:uppercase; letter-spacing:-.03em;
+  padding-bottom:2rem; border-bottom:3px solid var(--k); margin-bottom:3rem;
+}
+.sec-lbl {
+  font-size:.55rem; font-weight:700; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--g2); margin-bottom:.5rem; display:block;
+}
+/* sec-lbl that immediately precedes a page-title → tighter gap */
+.sec-lbl + .page-title { margin-top:0; }
+.about-bio {
+  font-size:.72rem; font-weight:400;
+  line-height:1.9; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--k); max-width:440px;
+}
+.about-info-strip {
+  grid-column:1/-1;
+  display:flex; gap:4rem; flex-wrap:wrap;
+  border-top:1px solid rgba(0,0,0,.08); padding-top:2rem;
+}
+/* EXPERIENCE */
+.exp-list { margin-top:.5rem; }
+.exp-row { padding:1.4rem 0; border-bottom:1px solid rgba(0,0,0,.08); }
+.exp-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.35rem; gap:2rem; }
+.exp-role { font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--k); }
+.exp-period { font-size:.5rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--g2); white-space:nowrap; }
+.exp-company { font-size:.52rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--g2); margin-bottom:.55rem; }
+.exp-desc { font-size:.58rem; font-weight:400; letter-spacing:.06em; text-transform:uppercase; color:var(--g3); line-height:1.85; max-width:640px; }
+.skills-list { list-style:none; }
+.skills-list li {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:.85rem 0; border-bottom:1px solid rgba(0,0,0,.08);
+  font-size:.85rem; font-weight:400;
+  transition:color .2s, padding-left .2s;
+}
+.skills-list li:hover { color:var(--k); padding-left:.4rem; font-weight:700; }
+.skills-list li em {
+  font-size:.52rem; font-weight:700; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--g2); font-style:normal;
+}
+
+/* ══════════════════════════════
+   ÁREAS
+══════════════════════════════ */
+#p-areas { padding:6vh 3rem 0; }
+#p-areas .page-title { margin-bottom:0; }
+
+.area-row {
+  display:grid; grid-template-columns:80px 1fr auto;
+  align-items:center; gap:2rem;
+  padding:4vh 0; border-bottom:1px solid rgba(0,0,0,.09);
+  cursor:none; position:relative;
+  transition:padding-left .3s;
+}
+.area-row::before {
+  content:''; position:absolute; left:0; bottom:0;
+  width:0; height:2px; background:var(--k);
+  transition:width .35s cubic-bezier(.4,0,.2,1);
+}
+.area-row:hover::before { width:100%; }
+.area-row:hover .area-num { color:rgba(0,0,0,.35); }
+.area-row:hover .area-name { letter-spacing:.01em; }
+.area-row:hover .area-arrow { opacity:1; transform:translateX(0); }
+
+.area-num {
+  font-size:3.5rem; font-weight:700; line-height:1;
+  color:rgba(0,0,0,.12); transition:color .25s;
+}
+.area-name {
+  font-size:clamp(1.4rem,3.2vw,3.8rem); font-weight:700;
+  line-height:.9; text-transform:uppercase; letter-spacing:-.02em;
+  transition:letter-spacing .3s;
+}
+.area-cat {
+  font-size:.55rem; font-weight:700; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--g2); margin-top:.5rem;
+}
+.area-arrow {
+  font-size:1.4rem; color:var(--k); opacity:0;
+  transform:translateX(-8px);
+  transition:opacity .3s, transform .3s;
+}
+
+/* ══════════════════════════════
+   WORKS
+══════════════════════════════ */
+#p-works { padding:6vh 3rem 10vh; }
+
+.works-head {
+  display:flex; justify-content:space-between; align-items:center;
+  padding-bottom:2rem; border-bottom:3px solid var(--k);
+}
+.works-head-left { display:flex; align-items:baseline; gap:2rem; }
+.works-big {
+  font-size:clamp(3rem,8vw,10rem); font-weight:700;
+  line-height:.88; text-transform:uppercase; letter-spacing:-.03em;
+}
+.filter-tabs { display:flex; gap:.6rem; }
+.ftab {
+  font-size:.52rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  padding:.3rem .7rem; border:1.5px solid rgba(0,0,0,.14); color:var(--g2);
+  cursor:none; background:none; transition:all .2s;
+}
+.ftab:hover, .ftab.on { background:var(--k); color:var(--w); border-color:var(--k); }
+.works-cnt { font-size:.58rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--g2); }
+
+.proj-row {
+  display:grid; grid-template-columns:70px 1fr 260px;
+  align-items:start; gap:2rem;
+  border-bottom:1px solid rgba(0,0,0,.09);
+  padding:2.5rem 0; cursor:none;
+  opacity:0; transform:translateY(22px);
+  transition:opacity .6s ease, transform .6s ease;
+  position:relative;
+}
+.proj-row.on { opacity:1; transform:translateY(0); }
+.proj-row::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:2px;
+  background:var(--k); transform:scaleX(0); transform-origin:left;
+  transition:transform .35s ease;
+}
+.proj-row:hover::after { transform:scaleX(1); }
+
+.p-num {
+  font-size:3.2rem; font-weight:700; line-height:1;
+  color:rgba(0,0,0,.1); transition:color .25s;
+}
+.proj-row:hover .p-num { color:var(--k); }
+
+.p-cat { font-size:.52rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--g2); margin-bottom:.35rem; }
+.p-name {
+  font-size:clamp(1.6rem,3vw,4rem); font-weight:700;
+  line-height:.95; text-transform:uppercase; letter-spacing:-.02em;
+}
+.p-tags { display:flex; flex-wrap:wrap; gap:.3rem; margin-top:.65rem; }
+.p-tag {
+  font-size:.5rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  padding:.18rem .5rem; border:1.5px solid rgba(0,0,0,.12); color:var(--g3);
+  transition:all .2s;
+}
+.proj-row:hover .p-tag { border-color:var(--k); color:var(--k); }
+
+.p-img { position:relative; overflow:hidden; aspect-ratio:4/3; background:var(--g1); }
+.p-img img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  transform:scale(1.07); filter:grayscale(15%);
+  transition:transform .65s ease, filter .5s ease;
+}
+.proj-row:hover .p-img img { transform:scale(1); filter:grayscale(0%); }
+.p-ov {
+  position:absolute; inset:0; background:rgba(0,0,0,.88);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity .3s;
+}
+.proj-row:hover .p-ov { opacity:1; }
+.p-ov span { font-size:.55rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:#fff; }
+
+/* ══════════════════════════════
+   CONTACT
+══════════════════════════════ */
+#p-contact {
+  padding:6vh 3rem 0;
+  display:flex; flex-direction:column;
+}
+.contact-big {
+  font-size:clamp(2rem,6vw,8rem); font-weight:700;
+  line-height:.9; text-transform:uppercase; letter-spacing:-.03em;
+}
+.contact-tagline {
+  font-size:.55rem; font-weight:700; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--g2); margin-bottom:1rem;
+}
+/* form layout */
+.contact-form-wrap {
+  display:grid; grid-template-columns:1fr 2fr 1fr;
+  border-top:1px solid rgba(0,0,0,.12);
+  border-bottom:1px solid rgba(0,0,0,.12);
+  margin-top:4vh;
+}
+.cf-label-col {
+  padding:3vh 2rem 3vh 0;
+  border-right:1px solid rgba(0,0,0,.12);
+  display:flex; align-items:flex-start;
+}
+.cf-label-col span {
+  font-size:.58rem; font-weight:700; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--k);
+}
+.cf-left {
+  padding:3vh 2rem;
+  border-right:1px solid rgba(0,0,0,.12);
+  display:flex; flex-direction:column; gap:1.5rem;
+}
+.cf-right {
+  padding:3vh 0 3vh 2rem;
+  display:flex; flex-direction:column; gap:1rem;
+}
+.cf-field {
+  display:flex; flex-direction:column;
+  border-bottom:1px solid rgba(0,0,0,.2);
+  padding-bottom:.4rem;
+}
+.cf-field input, .cf-field select, .cf-field textarea {
+  background:none; border:none; outline:none;
+  font-family:var(--font); font-size:.8rem; color:var(--k);
+  padding:.2rem 0; resize:none; cursor:none;
+}
+.cf-field select { appearance:none; cursor:none; }
+.cf-field textarea { min-height:120px; }
+.cf-field input::placeholder,
+.cf-field textarea::placeholder,
+.cf-field select:invalid { color:var(--g2); }
+.cf-select-wrap {
+  display:flex; justify-content:space-between; align-items:center;
+  border-bottom:1px solid rgba(0,0,0,.2);
+}
+.cf-select-wrap select {
+  flex:1; background:none; border:none; outline:none;
+  font-family:var(--font); font-size:.8rem; color:var(--k);
+  padding:.6rem 0; appearance:none; cursor:none;
+}
+.cf-select-wrap .cf-arr { font-size:.7rem; color:var(--g2); }
+.cf-send-row {
+  border-top:1px solid rgba(0,0,0,.12);
+  padding:1.5rem 0 0;
+  display:flex; justify-content:center;
+}
+.cf-send-btn {
+  font-family:var(--font); font-size:.62rem; font-weight:700;
+  letter-spacing:.22em; text-transform:uppercase;
+  background:none; border:none; color:var(--k); cursor:none;
+  transition:opacity .2s;
+}
+.cf-send-btn:hover { opacity:.45; }
+.cf-privacy {
+  text-align:center; padding:.8rem 0 3vh;
+  font-size:.5rem; color:var(--g2); letter-spacing:.08em;
+}
+.c-link {
+  display:block; text-decoration:none; color:var(--k);
+  font-size:.88rem; font-weight:700; cursor:none; transition:opacity .2s;
+}
+.c-link:hover { opacity:.45; }
+.pfooter {
+  grid-column:1/-1; margin-top:4vh; padding-top:1.5rem;
+  border-top:1px solid rgba(0,0,0,.08);
+  display:flex; justify-content:space-between;
+}
+.pfooter span { font-size:.55rem; font-weight:400; color:var(--g2); letter-spacing:.08em; }
+
+/* LIGHTBOX */
+/* ── PROJECT PANEL (Behance-style) ── */
+.lb {
+  position:fixed; inset:0; z-index:900;
+  background:#fff;
+  overflow-y:auto; overflow-x:hidden;
+  opacity:0; pointer-events:none;
+  transition:opacity .3s;
+}
+.lb.open { opacity:1; pointer-events:all; }
+.lb-header {
+  position:sticky; top:0; z-index:10;
+  background:rgba(255,255,255,.95); backdrop-filter:blur(8px);
+  border-bottom:1px solid #e8e8e8;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 3rem; height:58px;
+}
+.lb-name { font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--k); }
+.lb-sub  { font-size:.55rem; letter-spacing:.1em; text-transform:uppercase; color:var(--g2); }
+.lb-x {
+  background:none; border:none; font-family:var(--font);
+  font-size:.55rem; font-weight:700; letter-spacing:.18em;
+  text-transform:uppercase; cursor:none; color:var(--g3);
+  transition:color .2s; padding:.5rem;
+}
+.lb-x:hover { color:var(--k); }
+.lb-images {
+  display:flex; flex-direction:column; align-items:center;
+  gap:0; padding:0 0 8vh;
+}
+.lb-images img {
+  width:100%; max-width:900px;
+  display:block; object-fit:cover;
+}
+/* hide unused elements */
+.lb-prev,.lb-next,.lb-row,.lb-cnt,.lb-img { display:none; }
+
+/* ARCHIVO — project list */
+.area-projects {
+  max-height:0; overflow:hidden;
+  transition:max-height .45s cubic-bezier(.4,0,.2,1);
+  border-bottom:none;
+}
+.area-projects.open { max-height:600px; }
+
+.arch-row {
+  display:grid;
+  grid-template-columns:36px 1fr 1fr 1fr 52px;
+  align-items:center; gap:1rem;
+  padding:.85rem 0;
+  border-bottom:1px solid rgba(0,0,0,.07);
+  cursor:none;
+  transition:background .2s;
+}
+.arch-row:hover { background:rgba(0,0,0,.025); }
+.arch-num  { font-size:.5rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--g2); }
+.arch-name { font-size:.68rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--k); }
+.arch-tags { font-size:.52rem; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--g3); }
+.arch-type { font-size:.52rem; font-weight:400; letter-spacing:.1em; text-transform:uppercase; color:var(--g2); }
+.arch-year { font-size:.52rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--g2); text-align:right; }
+
+/* area-arrow becomes + / − */
+.area-row .area-arrow {
+  font-size:1.2rem; font-weight:300; opacity:.5;
+  transform:none; transition:transform .35s, opacity .3s;
+}
+.area-row:hover .area-arrow { opacity:1; }
+.area-row.open .area-arrow { transform:rotate(45deg); }
+
+/* proj image cursor */
+#proj-img-cursor {
+  position:fixed; pointer-events:none; z-index:9996;
+  width:220px; height:150px;
+  background-size:cover; background-position:center;
+  opacity:0; transition:opacity .18s;
+}
+
+/* REVEAL */
+.rev { opacity:0; transform:translateY(22px); transition:opacity .65s ease, transform .65s ease; }
+.rev.on { opacity:1; transform:translateY(0); }
+
+/* LANG TOGGLE */
+.lang-toggle {
+  display:flex; gap:.2rem; align-items:center;
+  margin-left:2.5rem; padding-left:2.5rem;
+  border-left:1px solid rgba(0,0,0,.12);
+}
+.lang-btn {
+  font-size:.55rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  background:none; border:none; color:var(--g2); cursor:none; padding:.2rem .3rem;
+  transition:color .2s;
+}
+.lang-btn.on { color:var(--k); border-bottom:1.5px solid var(--k); }
+.lang-btn:hover { color:var(--k); }
+.lang-sep { font-size:.55rem; color:var(--g2); }
+
+/* ══════════════════════════════
+   RESPONSIVE
+══════════════════════════════ */
+@media(max-width:768px){
+  nav { padding:0 1.2rem; }
+  .nav-links { gap:1rem; }
+  .nav-links a { font-size:.48rem; }
+  .lang-toggle { margin-left:.6rem; padding-left:.6rem; }
+  #navClock { display:none !important; }
+
+  /* hero */
+  .hero-name-layer h1 { font-size:clamp(2.8rem,14vw,7rem); }
+
+  /* home description */
+  #p-home > div[style*="grid"] {
+    grid-template-columns:1fr !important;
+    gap:2rem !important;
+    padding:6vh 1.2rem 5vh !important;
+  }
+
+  /* ticker */
+  .ticker-wrap { padding:0; }
+
+  /* carousel */
+  .car-slide img { height:52vw; }
+  .car-caption { padding:.8rem 1.2rem; }
+
+  /* home areas */
+  .home-areas-head { padding:4vh 1.2rem 1.5rem; }
+  .home-areas-grid { grid-template-columns:1fr 1fr; }
+  .harea-col { padding:3vh 1.2rem; min-height:38vw; }
+
+  /* cta */
+  .home-cta { padding:6vh 1.2rem; }
+
+  /* footer */
+  .site-footer { padding:.8rem 1.2rem; flex-direction:column; gap:.5rem; align-items:flex-start; }
+  .site-footer .f-links { gap:1rem; }
+
+  /* about */
+  #p-about { padding:4vh 1.2rem 8vh; grid-template-columns:1fr !important; gap:2rem; }
+  .page-title { font-size:clamp(2rem,12vw,5rem); }
+
+  /* areas */
+  #p-areas { padding:4vh 1.2rem 0; }
+  .area-row { grid-template-columns:50px 1fr auto; gap:1rem; padding:3vh 0; }
+  .area-num { font-size:2rem; }
+
+  /* works */
+  #p-works { padding:4vh 1.2rem 8vh; }
+  .works-head { flex-direction:column; align-items:flex-start; gap:1rem; }
+  .works-head-left { flex-direction:column; gap:.8rem; }
+  .works-big { font-size:clamp(2rem,12vw,5rem); }
+  .filter-tabs { flex-wrap:wrap; }
+  .proj-row { grid-template-columns:48px 1fr; gap:1rem; }
+  .p-img { display:none; }
+  .p-name { font-size:clamp(1.2rem,5vw,2rem); }
+
+  /* contact */
+  #p-contact { padding:4vh 1.2rem 0; }
+  .contact-form-wrap { grid-template-columns:1fr; }
+  .cf-label-col { border-right:none; border-bottom:1px solid rgba(0,0,0,.12); padding:2vh 0; }
+  .cf-left { border-right:none; border-bottom:1px solid rgba(0,0,0,.12); padding:2vh 0; }
+  .cf-right { padding:2vh 0; }
+
+  /* project panel */
+  .lb-header { padding:0 1.2rem; }
+  .lb-images img { max-width:100vw; }
+
+  /* hide cursor elements on touch */
+  #c-dot, #pencil-canvas { display:none; }
+  html, body { cursor:auto; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="pencil-canvas"></canvas>
+<div id="c-dot"></div>
+<div id="c-ring"></div>
+<div id="car-cursor-lbl">Ver proyecto →</div>
+<div id="proj-img-cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo" onclick="goTo('home');return false;">VATU</a>
+  <span id="navClock" style="position:absolute;left:50%;transform:translateX(-50%);font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g2);pointer-events:none;"></span>
+  <div style="display:flex;align-items:center;">
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="goTo('home');return false;"    data-page="home"    data-es="Home"     data-en="Home">Home</a></li>
+      <li><a href="#" onclick="goTo('about');return false;"   data-page="about"   data-es="About"    data-en="About">About</a></li>
+      <li><a href="#" onclick="goTo('areas');return false;"   data-page="areas"   data-es="Archivo"  data-en="Archive">Archivo</a></li>
+      <li><a href="#" onclick="goTo('works');return false;"   data-page="works"   data-es="Works"    data-en="Works">Works</a></li>
+      <li><a href="#" onclick="goTo('contact');return false;" data-page="contact" data-es="Contacto" data-en="Contact">Contacto</a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn on" id="btnES" onclick="setLang('es')">ES</button>
+      <span class="lang-sep">/</span>
+      <button class="lang-btn"   id="btnEN" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<div class="pages">
+
+  <!-- HOME -->
+  <div class="page active" id="p-home">
+    <div class="hero-zone">
+      <div class="hero-sticky">
+        <div class="hero-name-layer">
+          <p class="sec-lbl" style="margin-bottom:1.2rem;">Diseñadora · Buenos Aires</p>
+          <h1>VALENTINA<br>IGLESIAS</h1>
+          <p class="hero-sub">Diseño Industrial & Gráfico &nbsp;·&nbsp; UI/UX</p>
+        </div>
+        <div class="hero-photo-layer" id="heroPhoto">
+          <img src="./foto.jpg" alt="Valentina Iglesias" draggable="false">
+        </div>
+        <div class="scroll-hint">
+          <span>Scroll</span>
+          <div class="scroll-line"></div>
+        </div>
+      </div>
+    </div>
+    <!-- DESCRIPTION -->
+    <div style="padding:10vh 3rem 8vh; border-bottom:1px solid rgba(0,0,0,.09); max-width:600px;">
+      <p class="sec-lbl" style="margin-bottom:1.2rem;">About</p>
+      <p style="font-size:.72rem;font-weight:400;line-height:1.9;letter-spacing:.08em;text-transform:uppercase;color:var(--k);" data-es="Diseñadora recibida en 2025 en la UP, con foco en gráfico, industrial y 3D. Extrovertida, detallista y resolutiva — afronto cada proyecto de forma integral y con iniciativa." data-en="Designer graduated in 2025 from UP, focused on graphic, industrial and 3D design. Extroverted, detail-oriented and resourceful — I approach every project holistically and with initiative.">Diseñadora recibida en 2025 en la UP, con foco en gráfico, industrial y 3D. Extrovertida, detallista y resolutiva — afronto cada proyecto de forma integral y con iniciativa.</p>
+    </div>
+
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+      <div class="ticker-track">
+        <span class="ticker-item">Gráfico</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Industrial</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Web</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Branding</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Packaging</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">3D Render</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">UI/UX</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Social Media</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Identidad Visual</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Buenos Aires</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Gráfico</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Industrial</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Web</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Branding</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Packaging</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">3D Render</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">UI/UX</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Social Media</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Identidad Visual</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+        <span class="ticker-item">Buenos Aires</span><span class="ticker-sep">&nbsp;/&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- CAROUSEL -->
+    <div class="car-section">
+      <p class="car-label" data-es="Trabajos seleccionados" data-en="Selected works">Trabajos seleccionados</p>
+      <div class="car-viewport" style="cursor:none;">
+        <div class="car-track" id="carTrack">
+          <div class="car-slide car-clickable" data-pi="0"><img src="./BannerCalle copia.png" loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="14"><img src="./squick.png"           loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="1"><img src="./dewall.png"            loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="2"><img src="./datahealt.png"         loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="3"><img src="./tivoglio.png"          loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="8"><img src="./sensacine.png"         loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="10"><img src="./aircofe.png"          loading="lazy"></div>
+        </div>
+      </div>
+      <div class="car-caption">
+        <span class="car-name" id="carName">Clog Earplugs</span>
+        <span class="car-cat"  id="carCat">Branding · Social Media</span>
+        <span class="car-num"  id="carNum">01 / 07</span>
+      </div>
+      <div class="car-dots" id="carDots"></div>
+    </div>
+
+    <!-- AREAS PREVIEW -->
+    <div class="home-areas">
+      <div class="home-areas-head">
+        <h2 class="home-areas-title" data-es="ÁREAS" data-en="AREAS">ÁREAS</h2>
+        <span style="font-size:.58rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--g2)" data-es="4 disciplinas" data-en="4 disciplines">4 disciplinas</span>
+      </div>
+      <div class="home-areas-grid">
+
+        <div class="harea-col" onclick="goTo('works','grafico')">
+          <div class="harea-img">
+            <img src="./images/23.jpg">
+            <div class="harea-img-overlay"></div>
+          </div>
+          <div class="harea-top">
+            <div class="harea-num">01</div>
+            <div class="harea-name" data-es="DISEÑO GRÁFICO" data-en="GRAPHIC DESIGN">DISEÑO<br>GRÁFICO</div>
+          </div>
+          <div class="harea-bot">
+            <div class="harea-count" data-es="5 PROYECTOS" data-en="5 PROJECTS">5 PROYECTOS</div>
+          </div>
+          <span class="harea-arrow">↗</span>
+        </div>
+
+        <div class="harea-col" onclick="goTo('areas')">
+          <div class="harea-img">
+            <img src="./images/9.jpg">
+            <div class="harea-img-overlay"></div>
+          </div>
+          <div class="harea-top">
+            <div class="harea-num">02</div>
+            <div class="harea-name" data-es="DISEÑO INDUSTRIAL" data-en="INDUSTRIAL DESIGN">DISEÑO<br>INDUSTRIAL</div>
+          </div>
+          <div class="harea-bot">
+            <div class="harea-count" data-es="3 PROYECTOS" data-en="3 PROJECTS">3 PROYECTOS</div>
+          </div>
+          <span class="harea-arrow">↗</span>
+        </div>
+
+        <div class="harea-col" onclick="goTo('areas')">
+          <div class="harea-img">
+            <img src="./images/58.jpg">
+            <div class="harea-img-overlay"></div>
+          </div>
+          <div class="harea-top">
+            <div class="harea-num">03</div>
+            <div class="harea-name" data-es="DISEÑO WEB" data-en="WEB DESIGN">DISEÑO<br>WEB</div>
+          </div>
+          <div class="harea-bot">
+            <div class="harea-count" data-es="3 PROYECTOS" data-en="3 PROJECTS">3 PROYECTOS</div>
+          </div>
+          <span class="harea-arrow">↗</span>
+        </div>
+
+        <div class="harea-col" onclick="goTo('areas')">
+          <div class="harea-img">
+            <img src="./images/70.jpg">
+            <div class="harea-img-overlay"></div>
+          </div>
+          <div class="harea-top">
+            <div class="harea-num">04</div>
+            <div class="harea-name" data-es="OTROS" data-en="OTHERS">OTROS</div>
+          </div>
+          <div class="harea-bot">
+            <div class="harea-count" data-es="3 PROYECTOS" data-en="3 PROJECTS">3 PROYECTOS</div>
+          </div>
+          <span class="harea-arrow">↗</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="home-cta">
+      <button class="hero-btn" onclick="goTo('works')">Ver todos los proyectos →</button>
+    </div>
+
+    <footer class="site-footer">
+      <span class="f-name">Valentina Iglesias Bagu</span>
+      <div class="f-links">
+        <a href="mailto:vatuigle@gmail.com">Email</a>
+        <a href="#" target="_blank">Behance</a>
+        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
+      </div>
+      <span class="f-loc">Buenos Aires · 2025</span>
+    </footer>
+
+  </div><!-- /p-home -->
+
+  <!-- ABOUT -->
+  <div class="page" id="p-about">
+    <h2 class="page-title rev">About</h2>
+    <div class="rev" style="transition-delay:.08s">
+      <p class="sec-lbl" data-es="Biografía" data-en="Bio">Biografía</p>
+      <p class="about-bio" id="aboutBioEl">Hola, soy Valentina, aunque me dicen Vatu.<br><br>Finalicé en 2025 la Licenciatura en Diseño, Tecnología y Negocios en la Universidad de Palermo con un promedio de 8.<br><br>Me gustan distintas áreas del diseño, especialmente gráfico, industrial y modelado 3D, abordando cada proyecto de forma integral y estratégica.<br><br>Soy extrovertida, detallista y resolutiva. Me gusta tomar la iniciativa, pensar en todo y enfrentar los desafíos con seguridad.<br><br>¡Gracias por ver mi portfolio!</p>
+    </div>
+    <div class="rev" style="transition-delay:.16s">
+      <p class="sec-lbl" data-es="Habilidades" data-en="Skills">Habilidades</p>
+      <ul class="skills-list">
+        <li data-es="Brand Identity" data-en="Brand Identity">Brand Identity <em data-es="Gráfico" data-en="Graphic">Gráfico</em></li>
+        <li data-es="Diseño Industrial" data-en="Industrial Design">Diseño Industrial <em data-es="Industrial" data-en="Industrial">Industrial</em></li>
+        <li data-es="Dirección Creativa" data-en="Creative Direction">Dirección Creativa <em data-es="Estrategia" data-en="Strategy">Estrategia</em></li>
+        <li data-es="UI / UX Design" data-en="UI / UX Design">UI / UX Design <em data-es="Digital" data-en="Digital">Digital</em></li>
+        <li data-es="Packaging & OOH" data-en="Packaging & OOH">Packaging & OOH <em data-es="Producción" data-en="Production">Producción</em></li>
+        <li data-es="Figma + 3D" data-en="Figma + 3D">Figma + 3D <em data-es="Herramientas" data-en="Tools">Herramientas</em></li>
+      </ul>
+    </div>
+    <div class="rev" style="transition-delay:.22s; grid-column:1/-1;">
+      <p class="sec-lbl" data-es="Experiencia" data-en="Experience">Experiencia</p>
+      <div class="exp-list">
+
+        <div class="exp-row">
+          <div class="exp-head">
+            <span class="exp-role" data-es="Diseñadora de Contenido Digital — Freelance" data-en="Digital Content Designer — Freelance">Diseñadora de Contenido Digital — Freelance</span>
+            <span class="exp-period" data-es="2026 — Actualidad" data-en="2026 — Present">2026 — Actualidad</span>
+          </div>
+          <div class="exp-company">Altivia Marketing</div>
+          <p class="exp-desc" data-es="Producción de piezas gráficas y audiovisuales para redes sociales. Edición de video y armado de feed según lineamientos de la agencia. Creación de manuales de marca para los clientes que lo soliciten. Entrega de contenido ajustado a calendarios de la agencia." data-en="Production of graphic and audiovisual content for social media. Video editing and feed layout according to agency guidelines. Creation of brand manuals for clients. Delivery of content aligned with agency calendars.">Producción de piezas gráficas y audiovisuales para redes sociales. Edición de video y armado de feed según lineamientos de la agencia. Creación de manuales de marca para los clientes que lo soliciten. Entrega de contenido ajustado a calendarios de la agencia.</p>
+        </div>
+
+        <div class="exp-row">
+          <div class="exp-head">
+            <span class="exp-role" data-es="Diseñadora Gráfica de Redes — Part Time" data-en="Social Media Graphic Designer — Part Time">Diseñadora Gráfica de Redes — Part Time</span>
+            <span class="exp-period" data-es="2026 — Actualidad" data-en="2026 — Present">2026 — Actualidad</span>
+          </div>
+          <div class="exp-company">OneMarketing</div>
+          <p class="exp-desc" data-es="Diseño de identidad visual y piezas de comunicación para clientes de la agencia. Desarrollo de contenido para redes sociales con foco en coherencia visual siguiendo sus manuales de marca. Armado de feed, publicaciones y materiales gráficos bajo dirección creativa." data-en="Visual identity and communication design for agency clients. Social media content development focused on visual consistency following brand manuals. Feed layout, posts and graphic materials under creative direction.">Diseño de identidad visual y piezas de comunicación para clientes de la agencia. Desarrollo de contenido para redes sociales con foco en coherencia visual siguiendo sus manuales de marca. Armado de feed, publicaciones y materiales gráficos bajo dirección creativa.</p>
+        </div>
+
+        <div class="exp-row">
+          <div class="exp-head">
+            <span class="exp-role" data-es="Diseñadora & Desarrolladora Web — Freelance" data-en="Web Designer & Developer — Freelance">Diseñadora & Desarrolladora Web — Freelance</span>
+            <span class="exp-period">2024</span>
+          </div>
+          <div class="exp-company">Data Health</div>
+          <p class="exp-desc" data-es="Creación de dashboards para una plataforma de atención médica, incluyendo el diseño y desarrollo de una landing page, programación en HTML y CSS, así como la creación del logo y el manual de marca." data-en="Dashboard creation for a healthcare platform, including the design and development of a landing page, HTML/CSS programming, as well as logo creation and brand manual.">Creación de dashboards para una plataforma de atención médica, incluyendo el diseño y desarrollo de una landing page, programación en HTML y CSS, así como la creación del logo y el manual de marca.</p>
+        </div>
+
+        <div class="exp-row">
+          <div class="exp-head">
+            <span class="exp-role" data-es="Identidad Visual & Branding — Freelance" data-en="Visual Identity & Branding — Freelance">Identidad Visual & Branding — Freelance</span>
+            <span class="exp-period">2024</span>
+          </div>
+          <div class="exp-company" data-es="Arquitecto Particular" data-en="Private Architect">Arquitecto Particular</div>
+          <p class="exp-desc" data-es="Creación de tarjetas personales, logo, manual e identidad de marca." data-en="Creation of business cards, logo, brand manual and visual identity.">Creación de tarjetas personales, logo, manual e identidad de marca.</p>
+        </div>
+
+        <div class="exp-row">
+          <div class="exp-head">
+            <span class="exp-role" data-es="Administración de Propiedades Airbnb" data-en="Airbnb Property Management">Administración de Propiedades Airbnb</span>
+            <span class="exp-period" data-es="2023 — Actualidad" data-en="2023 — Present">2023 — Actualidad</span>
+          </div>
+          <div class="exp-company" data-es="Freelance" data-en="Freelance">Freelance</div>
+          <p class="exp-desc" data-es="Gestión de reservas, atención a huéspedes, coordinación de limpieza y mantenimiento, optimización de anuncios, resolución de incidencias en tiempo real, gestión de precios según demanda y comunicación con propietarios." data-en="Reservation management, guest service, cleaning and maintenance coordination, listing optimization, real-time issue resolution, dynamic pricing management and owner communication.">Gestión de reservas, atención a huéspedes, coordinación de limpieza y mantenimiento, optimización de anuncios, resolución de incidencias en tiempo real, gestión de precios según demanda y comunicación con propietarios.</p>
+        </div>
+
+        <div class="exp-row">
+          <div class="exp-head">
+            <span class="exp-role" data-es="Secretaria Administrativa" data-en="Administrative Secretary">Secretaria Administrativa</span>
+            <span class="exp-period" data-es="2022 — Actualidad" data-en="2022 — Present">2022 — Actualidad</span>
+          </div>
+          <div class="exp-company" data-es="Escribanía Bagu" data-en="Escribanía Bagu">Escribanía Bagu</div>
+          <p class="exp-desc" data-es="Gestión de documentación legal, certificaciones, índices y control de archivos, atención al cliente, manejo de información, coordinación de agendas y procesos administrativos." data-en="Management of legal documentation, certifications, filing and archive control, client service, information handling, scheduling and administrative processes.">Gestión de documentación legal, certificaciones, índices y control de archivos, atención al cliente, manejo de información, coordinación de agendas y procesos administrativos.</p>
+        </div>
+
+      </div>
+    </div>
+    <footer class="site-footer">
+      <span class="f-name">Valentina Iglesias Bagu</span>
+      <div class="f-links">
+        <a href="mailto:vatuigle@gmail.com">Email</a>
+        <a href="#" target="_blank">Behance</a>
+        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
+      </div>
+      <span class="f-loc">Buenos Aires · 2025</span>
+    </footer>
+  </div>
+
+  <!-- ARCHIVO -->
+  <div class="page" id="p-areas">
+    <h2 class="page-title rev" data-es="Archivo" data-en="Archive">Archivo</h2>
+
+    <!-- GRÁFICO -->
+    <div class="area-row rev" onclick="toggleArea('grafico')" id="arow-grafico" style="transition-delay:.05s">
+      <div class="area-num">01</div>
+      <div>
+        <div class="area-name" data-es="Diseño Gráfico" data-en="Graphic Design">Diseño Gráfico</div>
+        <div class="area-cat" data-es="Branding · Identidad Visual · OOH · Social Media · 5 proyectos" data-en="Branding · Visual Identity · OOH · Social Media · 5 projects">Branding · Identidad Visual · OOH · Social Media · 5 proyectos</div>
+      </div>
+      <span class="area-arrow" id="aarr-grafico">+</span>
+    </div>
+    <div class="area-projects" id="aproj-grafico">
+      <div class="arch-row" data-img="./images/24.jpg" onclick="lbOpen(0)"><span class="arch-num">01</span><span class="arch-name">Clog Earplugs</span><span class="arch-tags">Branding · Social Media · OOH</span><span class="arch-type">Accesorios</span><span class="arch-year">2024</span></div>
+      <div class="arch-row" data-img="./images/39.jpg" onclick="lbOpen(1)"><span class="arch-num">02</span><span class="arch-name">The Wall — Pink Floyd</span><span class="arch-tags">Gráfica · Packaging · Merchandising</span><span class="arch-type">Cultura · Música</span><span class="arch-year">2024</span></div>
+      <div class="arch-row" data-img="./images/44.jpg" onclick="lbOpen(2)"><span class="arch-num">03</span><span class="arch-name">Data Health</span><span class="arch-tags">Identidad Visual · Sobre · Tarjetas</span><span class="arch-type">Salud</span><span class="arch-year">2023</span></div>
+      <div class="arch-row" data-img="./images/47.jpg" onclick="lbOpen(3)"><span class="arch-num">04</span><span class="arch-name">Tivoglio</span><span class="arch-tags">Manual de Marca · Redes Sociales</span><span class="arch-type">Gastronomía</span><span class="arch-year">2024</span></div>
+      <div class="arch-row" data-img="./images/55.jpg" onclick="lbOpen(4)"><span class="arch-num">05</span><span class="arch-name">Ezequiel Tagliafico</span><span class="arch-tags">Logo · Branding</span><span class="arch-type">Personal Trainer</span><span class="arch-year">2023</span></div>
+    </div>
+
+    <!-- INDUSTRIAL -->
+    <div class="area-row rev" onclick="toggleArea('industrial')" id="arow-industrial" style="transition-delay:.1s">
+      <div class="area-num">02</div>
+      <div>
+        <div class="area-name" data-es="Diseño Industrial" data-en="Industrial Design">Diseño Industrial</div>
+        <div class="area-cat" data-es="Producto · 3D Render · Espacio Urbano · 3 proyectos" data-en="Product · 3D Render · Urban Space · 3 projects">Producto · 3D Render · Espacio Urbano · 3 proyectos</div>
+      </div>
+      <span class="area-arrow" id="aarr-industrial">+</span>
+    </div>
+    <div class="area-projects" id="aproj-industrial">
+      <div class="arch-row" data-img="./images/10.jpg" onclick="lbOpen(5)"><span class="arch-num">01</span><span class="arch-name">GAMA Secador de Pelo</span><span class="arch-tags">Rediseño Industrial · 3D Render</span><span class="arch-type">Electrodomésticos</span><span class="arch-year">2023</span></div>
+      <div class="arch-row" data-img="./images/15.jpg" onclick="lbOpen(6)"><span class="arch-num">02</span><span class="arch-name">Diosole</span><span class="arch-tags">Lámpara · Panel Solar · 3D</span><span class="arch-type">Iluminación</span><span class="arch-year">2024</span></div>
+      <div class="arch-row" data-img="./images/18.jpg" onclick="lbOpen(7)"><span class="arch-num">03</span><span class="arch-name">Flower Essence</span><span class="arch-tags">Kiosko Refrigerado · IMS · 3D</span><span class="arch-type">Cosmética · Retail</span><span class="arch-year">2023</span></div>
+    </div>
+
+    <!-- WEB -->
+    <div class="area-row rev" onclick="toggleArea('web')" id="arow-web" style="transition-delay:.15s">
+      <div class="area-num">03</div>
+      <div>
+        <div class="area-name" data-es="Diseño Web" data-en="Web Design">Diseño Web</div>
+        <div class="area-cat" data-es="UI · HTML/CSS · Dashboard · Responsive · 3 proyectos" data-en="UI · HTML/CSS · Dashboard · Responsive · 3 projects">UI · HTML/CSS · Dashboard · Responsive · 3 proyectos</div>
+      </div>
+      <span class="area-arrow" id="aarr-web">+</span>
+    </div>
+    <div class="area-projects" id="aproj-web">
+      <div class="arch-row" data-img="./images/59.jpg" onclick="lbOpen(8)"><span class="arch-num">01</span><span class="arch-name">Sensacine</span><span class="arch-tags">Rediseño Web · HTML/CSS · UI</span><span class="arch-type">Entretenimiento</span><span class="arch-year">2024</span></div>
+      <div class="arch-row" data-img="./images/62.jpg" onclick="lbOpen(9)"><span class="arch-num">02</span><span class="arch-name">Data Health — UI</span><span class="arch-tags">Dashboard · UI · Web</span><span class="arch-type">Salud · Tech</span><span class="arch-year">2023</span></div>
+      <div class="arch-row" data-img="./images/66.jpg" onclick="lbOpen(10)"><span class="arch-num">03</span><span class="arch-name">Air Coffee</span><span class="arch-tags">Sitio Web · Responsive · UI</span><span class="arch-type">Gastronomía</span><span class="arch-year">2024</span></div>
+    </div>
+
+    <!-- OTROS -->
+    <div class="area-row rev" onclick="toggleArea('otros')" id="arow-otros" style="transition-delay:.2s">
+      <div class="area-num">04</div>
+      <div>
+        <div class="area-name" data-es="Otros" data-en="Others">Otros</div>
+        <div class="area-cat" data-es="Publicidad · Packaging · Biomaterial · 3 proyectos" data-en="Advertising · Packaging · Biomaterial · 3 projects">Publicidad · Packaging · Biomaterial · 3 proyectos</div>
+      </div>
+      <span class="area-arrow" id="aarr-otros">+</span>
+    </div>
+    <div class="area-projects" id="aproj-otros">
+      <div class="arch-row" data-img="./images/71.jpg" onclick="lbOpen(11)"><span class="arch-num">01</span><span class="arch-name">Nesquik</span><span class="arch-tags">Publicidad · Social Media · OOH</span><span class="arch-type">Alimentación</span><span class="arch-year">2024</span></div>
+      <div class="arch-row" data-img="./images/76.jpg" onclick="lbOpen(12)"><span class="arch-num">02</span><span class="arch-name">Bioessential</span><span class="arch-tags">Billetera · Biomaterial · Packaging</span><span class="arch-type">Moda Sostenible</span><span class="arch-year">2023</span></div>
+      <div class="arch-row" data-img="./images/81.jpg" onclick="lbOpen(13)"><span class="arch-num">03</span><span class="arch-name">Estación Belgrano C</span><span class="arch-tags">Diseño Industrial · Espacio Urbano</span><span class="arch-type">Espacio Público</span><span class="arch-year">2023</span></div>
+    </div>
+
+    <footer class="site-footer">
+      <span class="f-name">Valentina Iglesias Bagu</span>
+      <div class="f-links">
+        <a href="mailto:vatuigle@gmail.com">Email</a>
+        <a href="#" target="_blank">Behance</a>
+        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
+      </div>
+      <span class="f-loc">Buenos Aires · 2025</span>
+    </footer>
+  </div>
+
+  <!-- WORKS -->
+  <div class="page" id="p-works">
+    <div class="works-head rev">
+      <div class="works-head-left">
+        <h2 class="works-big">Works</h2>
+        <div class="filter-tabs">
+          <button class="ftab on" data-f="all"       onclick="fw('all')"       data-es="Todos"      data-en="All">Todos</button>
+          <button class="ftab"   data-f="grafico"    onclick="fw('grafico')"   data-es="Gráfico"    data-en="Graphic">Gráfico</button>
+          <button class="ftab"   data-f="industrial" onclick="fw('industrial')" data-es="Industrial" data-en="Industrial">Industrial</button>
+          <button class="ftab"   data-f="web"        onclick="fw('web')"       data-es="Web"        data-en="Web">Web</button>
+          <button class="ftab"   data-f="otros"      onclick="fw('otros')"     data-es="Otros"      data-en="Others">Otros</button>
+        </div>
+      </div>
+      <span class="works-cnt" id="wCnt">14 proyectos</span>
+    </div>
+
+    <div id="projList">
+      <div class="proj-row" data-p="0"  data-a="grafico">   <div class="p-num">01</div><div><p class="p-cat">Diseño Gráfico</p>     <h3 class="p-name">Clog Earplugs</h3>          <div class="p-tags"><span class="p-tag">Branding</span><span class="p-tag">Social Media</span><span class="p-tag">OOH</span></div></div>            <div class="p-img"><img src="./images/24.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="1"  data-a="grafico">   <div class="p-num">02</div><div><p class="p-cat">Diseño Gráfico</p>     <h3 class="p-name">The Wall — Pink Floyd</h3>  <div class="p-tags"><span class="p-tag">Gráfica</span><span class="p-tag">Packaging</span><span class="p-tag">Merchandising</span></div></div>  <div class="p-img"><img src="./images/39.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="2"  data-a="grafico">   <div class="p-num">03</div><div><p class="p-cat">Identidad Visual</p>   <h3 class="p-name">Data Health</h3>            <div class="p-tags"><span class="p-tag">Branding</span><span class="p-tag">Sobre</span><span class="p-tag">Tarjetas</span></div></div>      <div class="p-img"><img src="./images/44.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="3"  data-a="grafico">   <div class="p-num">04</div><div><p class="p-cat">Identidad Visual</p>   <h3 class="p-name">Tivoglio</h3>               <div class="p-tags"><span class="p-tag">Manual de Marca</span><span class="p-tag">Redes Sociales</span></div></div>                <div class="p-img"><img src="./images/47.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="4"  data-a="grafico">   <div class="p-num">05</div><div><p class="p-cat">Diseño Gráfico</p>     <h3 class="p-name">Ezequiel Tagliafico</h3>    <div class="p-tags"><span class="p-tag">Logo</span><span class="p-tag">Branding</span><span class="p-tag">PT</span></div></div>              <div class="p-img"><img src="./images/55.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="5"  data-a="industrial"><div class="p-num">06</div><div><p class="p-cat">Diseño Industrial</p>  <h3 class="p-name">GAMA Secador</h3>            <div class="p-tags"><span class="p-tag">Rediseño</span><span class="p-tag">3D Render</span></div></div>                                            <div class="p-img"><img src="./images/10.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="6"  data-a="industrial"><div class="p-num">07</div><div><p class="p-cat">Diseño Industrial</p>  <h3 class="p-name">Diosole</h3>                 <div class="p-tags"><span class="p-tag">Lámpara</span><span class="p-tag">Panel Solar</span><span class="p-tag">3D</span></div></div>             <div class="p-img"><img src="./images/15.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="7"  data-a="industrial"><div class="p-num">08</div><div><p class="p-cat">Diseño Industrial</p>  <h3 class="p-name">Flower Essence</h3>          <div class="p-tags"><span class="p-tag">Kiosko</span><span class="p-tag">IMS</span><span class="p-tag">3D</span></div></div>                   <div class="p-img"><img src="./images/18.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="8"  data-a="web">       <div class="p-num">09</div><div><p class="p-cat">Diseño Web</p>         <h3 class="p-name">Sensacine</h3>              <div class="p-tags"><span class="p-tag">Rediseño</span><span class="p-tag">HTML/CSS</span><span class="p-tag">UI</span></div></div>            <div class="p-img"><img src="./images/59.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="9"  data-a="web">       <div class="p-num">10</div><div><p class="p-cat">Diseño Web · UI</p>    <h3 class="p-name">Data Health — UI</h3>       <div class="p-tags"><span class="p-tag">Dashboard</span><span class="p-tag">UI</span><span class="p-tag">Web</span></div></div>               <div class="p-img"><img src="./images/62.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="10" data-a="web">       <div class="p-num">11</div><div><p class="p-cat">Diseño Web</p>         <h3 class="p-name">Air Coffee</h3>             <div class="p-tags"><span class="p-tag">Sitio Web</span><span class="p-tag">Responsive</span><span class="p-tag">UI</span></div></div>          <div class="p-img"><img src="./images/66.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="11" data-a="otros">     <div class="p-num">12</div><div><p class="p-cat">Publicidad</p>         <h3 class="p-name">Nesquik</h3>               <div class="p-tags"><span class="p-tag">Social Media</span><span class="p-tag">OOH</span><span class="p-tag">Publicidad</span></div></div>         <div class="p-img"><img src="./images/71.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="12" data-a="otros">     <div class="p-num">13</div><div><p class="p-cat">Industrial & Packaging</p><h3 class="p-name">Bioessential</h3>      <div class="p-tags"><span class="p-tag">Billetera</span><span class="p-tag">Biomaterial</span><span class="p-tag">Packaging</span></div></div><div class="p-img"><img src="./images/76.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+      <div class="proj-row" data-p="13" data-a="otros">     <div class="p-num">14</div><div><p class="p-cat">Diseño Industrial</p>  <h3 class="p-name">Estación Belgrano C</h3>    <div class="p-tags"><span class="p-tag">Espacio Urbano</span><span class="p-tag">3D Render</span></div></div>                            <div class="p-img"><img src="./images/81.jpg" loading="lazy"><div class="p-ov"><span>Ver proyecto →</span></div></div></div>
+    </div>
+    <footer class="site-footer">
+      <span class="f-name">Valentina Iglesias Bagu</span>
+      <div class="f-links">
+        <a href="mailto:vatuigle@gmail.com">Email</a>
+        <a href="#" target="_blank">Behance</a>
+        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
+      </div>
+      <span class="f-loc">Buenos Aires · 2025</span>
+    </footer>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="page" id="p-contact">
+    <div class="rev">
+      <p class="contact-tagline" data-es="Contacto" data-en="Contact">Contacto</p>
+      <h2 class="contact-big" data-es="TRABAJEMOS JUNTOS" data-en="LET'S WORK TOGETHER">TRABAJEMOS JUNTOS</h2>
+    </div>
+
+    <div class="contact-form-wrap rev" style="transition-delay:.1s;">
+      <!-- col 1: label -->
+      <div class="cf-label-col" style="flex-direction:column; justify-content:space-between; gap:2rem;">
+        <span data-es="Mi información" data-en="My info">Mi información</span>
+        <div>
+          <p class="sec-lbl" style="margin-bottom:.3rem;" data-es="Universidad" data-en="University">Universidad</p>
+          <span style="font-size:.78rem; line-height:1.5;" data-es="Universidad de Palermo · Lic. Diseño, Tecnología y Negocios · 2025 · Promedio 8" data-en="Universidad de Palermo · B.A. Design, Technology & Business · 2025 · GPA 8/10">Universidad de Palermo<br>Lic. Diseño, Tecnología y Negocios<br>2025 · Promedio 8</span>
+        </div>
+      </div>
+      <!-- col 2 -->
+      <div class="cf-left" style="gap:2rem;">
+        <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
+          <p class="sec-lbl" style="margin-bottom:.3rem;">Email</p>
+          <a href="mailto:vatuigle@gmail.com" class="c-link" style="font-size:.88rem; font-weight:400;">vatuigle@gmail.com</a>
+        </div>
+        <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
+          <p class="sec-lbl" style="margin-bottom:.3rem;" data-es="Teléfono" data-en="Phone">Teléfono</p>
+          <a href="tel:+5491144489600" class="c-link" style="font-size:.88rem; font-weight:400;">+54 9 11 4448 9600</a>
+        </div>
+        <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
+          <p class="sec-lbl" style="margin-bottom:.3rem;" data-es="Ubicación" data-en="Location">Ubicación</p>
+          <span style="font-size:.88rem;">Buenos Aires, Argentina</span>
+        </div>
+        <div>
+          <p class="sec-lbl" style="margin-bottom:.3rem;" data-es="Disponibilidad" data-en="Availability">Disponibilidad</p>
+          <span style="font-size:.88rem;" data-es="Abierta a nuevas propuestas" data-en="Open to new proposals">Abierta a nuevas propuestas</span>
+        </div>
+      </div>
+      <!-- col 3 -->
+      <div class="cf-right" style="gap:2rem;">
+        <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
+          <p class="sec-lbl" style="margin-bottom:.3rem;">Behance</p>
+          <a href="#" target="_blank" class="c-link" style="font-weight:400;">behance.net/valentinaiglesias</a>
+        </div>
+        <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
+          <p class="sec-lbl" style="margin-bottom:.3rem;">LinkedIn</p>
+          <a href="#" target="_blank" class="c-link" style="font-weight:400;">linkedin.com/in/valentinaiglesias</a>
+        </div>
+        <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
+          <p class="sec-lbl" style="margin-bottom:.3rem;">Instagram</p>
+          <a href="https://www.instagram.com/vatu.design/" target="_blank" class="c-link" style="font-weight:400;">@vatu.design</a>
+        </div>
+        <div>
+          <p class="sec-lbl" style="margin-bottom:.3rem;" data-es="Idiomas" data-en="Languages">Idiomas</p>
+          <span style="font-size:.88rem;" data-es="Español · Inglés" data-en="Spanish · English">Español · Inglés</span>
+        </div>
+      </div>
+    </div>
+    <footer class="site-footer">
+      <span class="f-name">Valentina Iglesias Bagu</span>
+      <div class="f-links">
+        <a href="mailto:vatuigle@gmail.com">Email</a>
+        <a href="#" target="_blank">Behance</a>
+        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
+      </div>
+      <span class="f-loc">Buenos Aires · 2025</span>
+    </footer>
+  </div>
+
+</div><!-- /pages -->
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb">
+  <div class="lb-header">
+    <div>
+      <div class="lb-name" id="lbName"></div>
+      <div class="lb-sub"  id="lbSub"></div>
+    </div>
+    <button class="lb-x" onclick="lbClose()">Cerrar ×</button>
+  </div>
+  <div class="lb-images" id="lbImages"></div>
+</div>
+
+<script>
+/* CURSOR — pencil trail */
+const dot=document.getElementById('c-dot');
+const pcv=document.getElementById('pencil-canvas');
+let mx=0,my=0;
+if(pcv){
+  const pctx=pcv.getContext('2d');
+  function resizePcv(){pcv.width=window.innerWidth;pcv.height=window.innerHeight;}
+  resizePcv();
+  window.addEventListener('resize',resizePcv);
+  const trail=[];
+  const TRAIL_LEN=14;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+    trail.push({x:mx,y:my,t:Date.now()});
+    if(trail.length>TRAIL_LEN) trail.shift();
+  });
+  (function drawLoop(){
+    pctx.clearRect(0,0,pcv.width,pcv.height);
+    const now=Date.now();
+    for(let i=1;i<trail.length;i++){
+      const a=trail[i-1], b=trail[i];
+      const age=(now-b.t)/220;
+      if(age>1) continue;
+      const alpha=(1-age)*0.5;
+      const w=1.2+(i/TRAIL_LEN)*1.8;
+      pctx.beginPath();
+      pctx.moveTo(a.x,a.y);
+      pctx.lineTo(b.x,b.y);
+      pctx.strokeStyle=`rgba(10,10,10,${alpha})`;
+      pctx.lineWidth=w;
+      pctx.lineCap='round';
+      pctx.stroke();
+    }
+    requestAnimationFrame(drawLoop);
+  })();
+}
+
+/* LANGUAGE TOGGLE */
+const TRANSLATIONS={
+  es:{
+    navHome:'Home', navAbout:'About', navAreas:'Archivo', navWorks:'Works', navContact:'Contacto',
+    heroSub:'Diseño Industrial & Gráfico · Buenos Aires',
+    aboutTitle:'About', aboutBio:'Hola, soy Valentina, aunque me dicen Vatu.<br><br>Finalicé en 2025 la Licenciatura en Diseño, Tecnología y Negocios en la Universidad de Palermo con un promedio de 8.<br><br>Me gustan distintas áreas del diseño, especialmente gráfico, industrial y modelado 3D, abordando cada proyecto de forma integral y estratégica.<br><br>Soy extrovertida, detallista y resolutiva. Me gusta tomar la iniciativa, pensar en todo y enfrentar los desafíos con seguridad.<br><br>¡Gracias por ver mi portfolio!',
+    descLabel:'About', worksBtn:'Ver todos los proyectos →',
+    contactTagline:'Trabajemos juntos', contactHero:'HABLEMOS',
+    close:'Cerrar ×'
+  },
+  en:{
+    navHome:'Home', navAbout:'About', navAreas:'Archive', navWorks:'Works', navContact:'Contact',
+    heroSub:'Industrial & Graphic Design · Buenos Aires',
+    aboutTitle:'About', aboutBio:"Hi, I'm Valentina, but everyone calls me Vatu.<br><br>In 2025 I completed my degree in Design, Technology and Business at Universidad de Palermo with an average of 8.<br><br>I enjoy different areas of design, especially graphic, industrial and 3D modeling, approaching each project holistically and strategically.<br><br>I'm extroverted, detail-oriented and resourceful. I like to take initiative, think things through and face challenges with confidence.<br><br>Thanks for viewing my portfolio!",
+    descLabel:'About', worksBtn:'View all projects →',
+    contactTagline:"Let's work together", contactHero:"LET'S TALK",
+    close:'Close ×'
+  }
+};
+let currentLang='es';
+function setLang(lang){
+  currentLang=lang;
+  document.getElementById('btnES').classList.toggle('on',lang==='es');
+  document.getElementById('btnEN').classList.toggle('on',lang==='en');
+  const t=TRANSLATIONS[lang];
+  // nav links
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    const key=a.dataset['page'];
+    if(key==='home') a.textContent=t.navHome;
+    if(key==='about') a.textContent=t.navAbout;
+    if(key==='areas') a.textContent=t.navAreas;
+    if(key==='works') a.textContent=t.navWorks;
+    if(key==='contact') a.textContent=t.navContact;
+    // restore 'on' class after text change
+    a.classList.toggle('on',a.dataset.page===cur);
+  });
+  // elements with data-es / data-en
+  document.querySelectorAll('[data-es]').forEach(el=>{
+    el.textContent=el.dataset[lang]||el.textContent;
+  });
+  // hero sub
+  const heroSubEl=document.querySelector('.hero-sub');
+  if(heroSubEl) heroSubEl.textContent=t.heroSub;
+  // about bio (preserve <br> tags)
+  const bioEl=document.getElementById('aboutBioEl');
+  if(bioEl) bioEl.innerHTML=t.aboutBio;
+  // works button
+  const wBtn=document.querySelector('.hero-btn');
+  if(wBtn) wBtn.textContent=t.worksBtn;
+  // project panel close button
+  const lbXBtn=document.querySelector('.lb-x');
+  if(lbXBtn) lbXBtn.textContent=t.close;
+}
+
+/* CLOCK */
+function updateClock(){
+  const now=new Date();
+  const ba=new Intl.DateTimeFormat('en-US',{timeZone:'America/Argentina/Buenos_Aires',hour:'numeric',minute:'2-digit',hour12:true}).format(now);
+  const[time,ampm]=ba.split(' ');
+  document.getElementById('navClock').textContent=time+(ampm||'').toLowerCase()+' (Bs.As)';
+}
+updateClock();
+setInterval(updateClock,30000);
+
+/* PAGE SWITCHING */
+let cur='home';
+function goTo(id, filter){
+  if(id===cur && !filter) return;
+  document.getElementById('p-'+cur).classList.remove('active');
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('on',a.dataset.page===id));
+  const pg=document.getElementById('p-'+id);
+  pg.classList.add('active');
+  pg.scrollTop=0;
+  cur=id;
+  // Trigger reveals
+  setTimeout(()=>{
+    pg.querySelectorAll('.rev').forEach((el,i)=>setTimeout(()=>el.classList.add('on'),i*70));
+    pg.querySelectorAll('.proj-row').forEach((el,i)=>setTimeout(()=>el.classList.add('on'),80+(i%5)*45));
+  },40);
+  if(id==='works' && filter) fw(filter);
+}
+document.querySelector('[data-page="home"]').classList.add('on');
+
+/* HERO SCROLL */
+const heroPhoto=document.getElementById('heroPhoto');
+const heroNameLayer=document.querySelector('.hero-name-layer');
+const homePg=document.getElementById('p-home');
+homePg.addEventListener('scroll',()=>{
+  const s=homePg.scrollTop;
+  const vh=window.innerHeight-58;
+  // Phase 1 (0→vh): foto sube
+  const p1=Math.min(1,Math.max(0,s/vh));
+  heroPhoto.style.transform=`translateY(${(1-p1)*100}%)`;
+},{passive:true});
+
+/* CAROUSEL */
+const carData = [
+  {name:'Clog Earplugs',        cat:'Branding · Social Media · OOH', pi:0},
+  {name:'SQuick',               cat:'Diseño · Branding',           pi:14},
+  {name:'The Wall — Pink Floyd',cat:'Gráfica · Packaging · Merchandising', pi:1},
+  {name:'Data Health',          cat:'Identidad Visual · Sobre · Tarjetas', pi:2},
+  {name:'Tivoglio',             cat:'Manual de Marca · Redes Sociales', pi:3},
+  {name:'Sensacine',            cat:'Rediseño Web · HTML/CSS · UI', pi:8},
+  {name:'Air Coffee',           cat:'Sitio Web · Responsive · UI', pi:10},
+];
+const carTrack=document.getElementById('carTrack');
+const carSlides=carTrack?carTrack.querySelectorAll('.car-slide'):[];
+const carNameEl=document.getElementById('carName');
+const carCatEl=document.getElementById('carCat');
+const carNumEl=document.getElementById('carNum');
+const carDotsEl=document.getElementById('carDots');
+let carCur=0;
+if(carDotsEl){
+  carSlides.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='car-dot'+(i===0?' on':'');
+    d.onclick=()=>{carGo(i);carReset();};
+    carDotsEl.appendChild(d);
+  });
+}
+function carGo(i){
+  carCur=(i+carSlides.length)%carSlides.length;
+  if(carTrack) carTrack.style.transform=`translateX(-${carCur*100}%)`;
+  if(carNameEl) carNameEl.textContent=carData[carCur].name;
+  if(carCatEl)  carCatEl.textContent=carData[carCur].cat;
+  if(carNumEl)  carNumEl.textContent=`${String(carCur+1).padStart(2,'0')} / ${String(carSlides.length).padStart(2,'0')}`;
+  document.querySelectorAll('.car-dot').forEach((d,j)=>d.classList.toggle('on',j===carCur));
+}
+let carTimer;
+function carReset(){clearInterval(carTimer);carTimer=setInterval(()=>carGo(carCur+1),4000);}
+carReset();
+// carousel cursor label + click
+const carCurLbl=document.getElementById('car-cursor-lbl');
+const carVp=document.querySelector('.car-viewport');
+if(carVp && carCurLbl){
+  carVp.addEventListener('mousemove',e=>{
+    carCurLbl.style.left=(e.clientX+16)+'px';
+    carCurLbl.style.top=(e.clientY+12)+'px';
+    carCurLbl.style.opacity='1';
+  });
+  carVp.addEventListener('mouseleave',()=>{ carCurLbl.style.opacity='0'; });
+}
+document.querySelectorAll('.car-clickable').forEach(slide=>{
+  slide.addEventListener('click',()=>{
+    const pi=parseInt(slide.dataset.pi);
+    lbOpen(pi);
+    carReset();
+    carCurLbl.style.opacity='0';
+  });
+});
+
+/* ARCHIVO — toggle areas */
+function toggleArea(id){
+  const list=document.getElementById('aproj-'+id);
+  const row=document.getElementById('arow-'+id);
+  const arrow=document.getElementById('aarr-'+id);
+  const isOpen=list.classList.contains('open');
+  list.classList.toggle('open',!isOpen);
+  row.classList.toggle('open',!isOpen);
+}
+
+/* proj image cursor on arch-rows */
+const projImgCursor=document.getElementById('proj-img-cursor');
+document.addEventListener('mousemove',e=>{
+  if(projImgCursor){
+    projImgCursor.style.left=(e.clientX+20)+'px';
+    projImgCursor.style.top=(e.clientY-75)+'px';
+  }
+});
+document.querySelectorAll('.arch-row').forEach(row=>{
+  row.addEventListener('mouseenter',()=>{
+    projImgCursor.style.backgroundImage=`url(${row.dataset.img})`;
+    projImgCursor.style.opacity='1';
+  });
+  row.addEventListener('mouseleave',()=>{
+    projImgCursor.style.opacity='0';
+  });
+});
+
+/* FILTER */
+function fw(f){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.toggle('on',t.dataset.f===f));
+  const rows=document.querySelectorAll('.proj-row');
+  let n=0;
+  rows.forEach(r=>{
+    const show=f==='all'||r.dataset.a===f;
+    r.style.display=show?'grid':'none';
+    if(show) n++;
+  });
+  document.getElementById('wCnt').textContent=n+' proyecto'+(n!==1?'s':'');
+}
+
+/* PROJECTS DATA */
+const PROJECTS=[
+  /* 0  */ {name:'Clog Earplugs',           sub:'Branding · Social Media · OOH',      imgs:[24,25,'./portfolio4.gif',37,'./portfolio5.gif']},
+  /* 1  */ {name:'The Wall — Pink Floyd',   sub:'Gráfica · Packaging · Merchandising', imgs:['./gifthewall.gif',40,41,42,43]},
+  /* 2  */ {name:'Data Health',             sub:'Identidad Visual · Sobre · Tarjetas', imgs:[44,45,46]},
+  /* 3  */ {name:'Tivoglio',               sub:'Manual de Marca · Redes Sociales',    imgs:[47,48,49,50,51,52,53,54]},
+  /* 4  */ {name:'Ezequiel Tagliafico',    sub:'Logo · Branding · Personal Trainer',  imgs:[55,56,57]},
+  /* 5  */ {name:'GAMA Secador de Pelo',   sub:'Rediseño Industrial · 3D Render',     imgs:[10,11,12,13]},
+  /* 6  */ {name:'Diosole',               sub:'Lámpara · Panel Solar · 3D',          imgs:[15,16,17]},
+  /* 7  */ {name:'Flower Essence',         sub:'Kiosko Refrigerado · IMS · 3D',       imgs:[18,19,20,21,22]},
+  /* 8  */ {name:'Sensacine',             sub:'Rediseño Web · HTML/CSS · UI',        imgs:[59,60,'./sensacine.gif']},
+  /* 9  */ {name:'Data Health — UI',       sub:'Dashboard · UI · Web',               imgs:['./datahealth.gif',63,64,'./dataheal2.gif']},
+  /* 10 */ {name:'Air Coffee',            sub:'Sitio Web · Responsive · UI',         imgs:[66,67,68,'./aircoffe.gif']},
+  /* 11 */ {name:'Nesquik',              sub:'Publicidad · Social Media · OOH',     imgs:[71,72,73,74,75]},
+  /* 12 */ {name:'Bioessential',          sub:'Billetera · Biomaterial · Packaging', imgs:[76,77,78,79,'./bioessential.gif']},
+  /* 13 */ {name:'Estación Belgrano C',   sub:'Diseño Industrial · Espacio Urbano',  imgs:[81,82,'./belgranoc.gif',84]},
+  /* 14 */ {name:'SQuick',               sub:'Diseño · Branding',                   imgs:['./squick.png']},
+];
+
+/* PROJECT PANEL */
+let lbP=0;
+const lbEl=document.getElementById('lb');
+function lbOpen(pi){
+  lbP=pi;
+  const p=PROJECTS[lbP];
+  document.getElementById('lbName').textContent=p.name;
+  document.getElementById('lbSub').textContent=p.sub;
+  const container=document.getElementById('lbImages');
+  container.innerHTML='';
+  p.imgs.forEach(n=>{
+    const img=document.createElement('img');
+    img.src = typeof n==='string' ? n : `./images/${n}.jpg`;
+    img.loading='lazy';
+    container.appendChild(img);
+  });
+  lbEl.scrollTop=0;
+  lbEl.classList.add('open');
+}
+function lbClose(){lbEl.classList.remove('open');}
+document.querySelectorAll('.proj-row').forEach(r=>r.addEventListener('click',()=>lbOpen(+r.dataset.p)));
+document.addEventListener('keydown',e=>{
+  if(!lbEl.classList.contains('open'))return;
+  if(e.key==='Escape')lbClose();
+});
+
+</script>
+</body>
+</html>

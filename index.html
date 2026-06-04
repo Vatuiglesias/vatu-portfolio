@@ -105,8 +105,8 @@ nav {
   transform:translateY(100%);
 }
 .hero-photo-layer img {
-  height:95%; width:auto; max-width:58vw;
-  object-fit:cover; display:block;
+  height:65%; width:auto; max-width:72vw;
+  display:block;
   user-select:none; -webkit-user-drag:none;
 }
 
@@ -129,13 +129,15 @@ nav {
 }
 .ticker-track {
   display:flex; gap:4rem; white-space:nowrap;
-  width:max-content; animation:ticker 20s linear infinite;
+  width:max-content; min-width:max-content;
+  animation:ticker 20s linear infinite;
+  flex-wrap:nowrap; justify-content:flex-start; align-items:center;
 }
 .ticker-item {
   font-size:.7rem; font-weight:700; letter-spacing:.16em;
   text-transform:uppercase; flex-shrink:0; color:var(--k);
 }
-.ticker-sep { color:var(--g2); font-weight:400; }
+.ticker-sep { color:var(--g2); font-weight:400; flex-shrink:0; }
 @keyframes ticker {
   from { transform:translateX(0); }
   to   { transform:translateX(-50%); }
@@ -202,7 +204,7 @@ nav {
   letter-spacing:-.03em; text-transform:uppercase; line-height:.9;
 }
 .home-areas-grid {
-  display:grid; grid-template-columns:repeat(3,1fr);
+  display:grid; grid-template-columns:repeat(2,1fr);
   border-top:none;
 }
 .harea-col {
@@ -638,6 +640,66 @@ nav {
 .lang-sep { font-size:.55rem; color:var(--g2); }
 
 /* ══════════════════════════════
+   HAMBURGER + MOBILE MENU
+══════════════════════════════ */
+.nav-hamburger {
+  display:none; flex-direction:column; gap:5px;
+  background:none; border:none; cursor:none; padding:.3rem;
+}
+.nav-hamburger span {
+  display:block; width:22px; height:1.5px; background:var(--k);
+  transition:transform .3s, opacity .3s;
+}
+.nav-hamburger.open span:nth-child(1){ transform:rotate(45deg) translate(4.5px,4.5px); }
+.nav-hamburger.open span:nth-child(2){ opacity:0; }
+.nav-hamburger.open span:nth-child(3){ transform:rotate(-45deg) translate(4.5px,-4.5px); }
+
+#mobileMenu {
+  position:fixed; top:var(--nav); left:0; right:0; bottom:0; z-index:490;
+  background:var(--w); padding:3rem 2rem 2rem;
+  flex-direction:column;
+  display:none; overflow-y:auto;
+}
+#mobileMenu.open { display:flex; }
+.mmenu-links { list-style:none; display:flex; flex-direction:column; }
+.mmenu-links li a {
+  display:block;
+  font-size:clamp(2rem,10vw,3.5rem); font-weight:700;
+  letter-spacing:-.02em; text-transform:uppercase;
+  text-decoration:none; color:var(--k);
+  padding:1rem 0; border-bottom:1px solid rgba(0,0,0,.08);
+  cursor:none;
+}
+.mmenu-links li a.on { color:var(--g2); }
+.mmenu-lang {
+  display:flex; gap:.8rem; align-items:center;
+  margin-top:3rem; padding-top:1.5rem;
+  border-top:1px solid rgba(0,0,0,.08);
+}
+.mmenu-lang button {
+  font-size:.6rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  background:none; border:none; color:var(--g2); cursor:none; padding:.2rem .3rem;
+}
+.mmenu-lang button.on { color:var(--k); border-bottom:1.5px solid var(--k); }
+.mmenu-lang span { font-size:.55rem; color:var(--g2); }
+
+/* HOME DESC */
+.home-desc { padding:10vh 3rem 8vh; }
+
+/* TICKER — ensure nowrap on items too */
+.ticker-item { white-space:nowrap; }
+.ticker-track { will-change:transform; }
+
+/* FOOTER: span full width in grid (About page) */
+#p-about .site-footer { grid-column:1/-1; margin-top:3rem; }
+#p-contact .site-footer { margin-top:4vh; }
+
+/* Clock: hide below 1024px to avoid overlap */
+@media(max-width:1024px){
+  #navClock { display:none !important; }
+}
+
+/* ══════════════════════════════
    RESPONSIVE
 ══════════════════════════════ */
 @media(max-width:768px){
@@ -646,6 +708,23 @@ nav {
   .nav-links a { font-size:.48rem; }
   .lang-toggle { margin-left:.6rem; padding-left:.6rem; }
   #navClock { display:none !important; }
+  /* hamburger */
+  .nav-right { display:none !important; }
+  .nav-hamburger { display:flex; }
+  /* experience head: stack on mobile */
+  .exp-head { flex-direction:column; gap:.2rem; }
+  /* arch-row: hide extra columns */
+  .arch-row { grid-template-columns:24px 1fr auto; }
+  .arch-tags, .arch-type { display:none; }
+  /* carousel caption: wrap */
+  .car-caption { flex-wrap:wrap; gap:.3rem; }
+  /* home desc responsive padding */
+  .home-desc { padding:6vh 1.2rem 5vh; }
+  /* ticker: fix deformation on mobile */
+  .ticker-wrap { padding:.6rem 0; overflow:hidden; }
+  .ticker-track { gap:2rem; }
+  /* archivo: disable hover image cursor entirely on touch */
+  #proj-img-cursor { display:none !important; }
 
   /* hero */
   .hero-name-layer h1 { font-size:clamp(2.8rem,14vw,7rem); }
@@ -710,6 +789,12 @@ nav {
   #c-dot, #pencil-canvas { display:none; }
   html, body { cursor:auto; }
 }
+@media(max-width:480px){
+  .home-areas-grid { grid-template-columns:1fr 1fr; }
+  .harea-col { min-height:45vw; }
+  .car-num { display:none; }
+  .contact-big { font-size:clamp(1.6rem,10vw,4rem); }
+}
 </style>
 </head>
 <body>
@@ -724,7 +809,7 @@ nav {
 <nav>
   <a href="#" class="nav-logo" onclick="goTo('home');return false;">VATU</a>
   <span id="navClock" style="position:absolute;left:50%;transform:translateX(-50%);font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--g2);pointer-events:none;"></span>
-  <div style="display:flex;align-items:center;">
+  <div class="nav-right" style="display:flex;align-items:center;">
     <ul class="nav-links" id="navLinks">
       <li><a href="#" onclick="goTo('home');return false;"    data-page="home"    data-es="Home"     data-en="Home">Home</a></li>
       <li><a href="#" onclick="goTo('about');return false;"   data-page="about"   data-es="About"    data-en="About">About</a></li>
@@ -738,7 +823,26 @@ nav {
       <button class="lang-btn"   id="btnEN" onclick="setLang('en')">EN</button>
     </div>
   </div>
+  <button class="nav-hamburger" id="navHamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div id="mobileMenu">
+  <ul class="mmenu-links">
+    <li><a href="#" onclick="goTo('home');closeMenu();return false;" data-page="home" data-es="Home" data-en="Home">Home</a></li>
+    <li><a href="#" onclick="goTo('about');closeMenu();return false;" data-page="about" data-es="About" data-en="About">About</a></li>
+    <li><a href="#" onclick="goTo('areas');closeMenu();return false;" data-page="areas" data-es="Archivo" data-en="Archive">Archivo</a></li>
+    <li><a href="#" onclick="goTo('works');closeMenu();return false;" data-page="works" data-es="Works" data-en="Works">Works</a></li>
+    <li><a href="#" onclick="goTo('contact');closeMenu();return false;" data-page="contact" data-es="Contacto" data-en="Contact">Contacto</a></li>
+  </ul>
+  <div class="mmenu-lang">
+    <button id="mbtnES" class="on" onclick="setLang('es')">ES</button>
+    <span>/</span>
+    <button id="mbtnEN" onclick="setLang('en')">EN</button>
+  </div>
+</div>
 
 <div class="pages">
 
@@ -761,7 +865,7 @@ nav {
       </div>
     </div>
     <!-- DESCRIPTION -->
-    <div style="padding:10vh 3rem 8vh; border-bottom:1px solid rgba(0,0,0,.09); max-width:600px;">
+    <div class="home-desc" style="border-bottom:1px solid rgba(0,0,0,.09); max-width:600px;">
       <p class="sec-lbl" style="margin-bottom:1.2rem;">About</p>
       <p style="font-size:.72rem;font-weight:400;line-height:1.9;letter-spacing:.08em;text-transform:uppercase;color:var(--k);" data-es="Diseñadora recibida en 2025 en la UP, con foco en gráfico, industrial y 3D. Extrovertida, detallista y resolutiva — afronto cada proyecto de forma integral y con iniciativa." data-en="Designer graduated in 2025 from UP, focused on graphic, industrial and 3D design. Extroverted, detail-oriented and resourceful — I approach every project holistically and with initiative.">Diseñadora recibida en 2025 en la UP, con foco en gráfico, industrial y 3D. Extrovertida, detallista y resolutiva — afronto cada proyecto de forma integral y con iniciativa.</p>
     </div>
@@ -798,7 +902,7 @@ nav {
       <div class="car-viewport" style="cursor:none;">
         <div class="car-track" id="carTrack">
           <div class="car-slide car-clickable" data-pi="0"><img src="./BannerCalle copia.png" loading="lazy"></div>
-          <div class="car-slide car-clickable" data-pi="14"><img src="./squick.png"           loading="lazy"></div>
+          <div class="car-slide car-clickable" data-pi="11"><img src="./squick.png"           loading="lazy"></div>
           <div class="car-slide car-clickable" data-pi="1"><img src="./dewall.png"            loading="lazy"></div>
           <div class="car-slide car-clickable" data-pi="2"><img src="./datahealt.png"         loading="lazy"></div>
           <div class="car-slide car-clickable" data-pi="3"><img src="./tivoglio.png"          loading="lazy"></div>
@@ -1259,6 +1363,10 @@ function setLang(lang){
   currentLang=lang;
   document.getElementById('btnES').classList.toggle('on',lang==='es');
   document.getElementById('btnEN').classList.toggle('on',lang==='en');
+  const mbES=document.getElementById('mbtnES');
+  const mbEN=document.getElementById('mbtnEN');
+  if(mbES) mbES.classList.toggle('on',lang==='es');
+  if(mbEN) mbEN.classList.toggle('on',lang==='en');
   const t=TRANSLATIONS[lang];
   // nav links
   document.querySelectorAll('.nav-links a').forEach(a=>{
@@ -1299,12 +1407,25 @@ function updateClock(){
 updateClock();
 setInterval(updateClock,30000);
 
+/* MOBILE MENU */
+function toggleMenu(){
+  const m=document.getElementById('mobileMenu');
+  const h=document.getElementById('navHamburger');
+  m.classList.toggle('open');
+  h.classList.toggle('open');
+}
+function closeMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('navHamburger').classList.remove('open');
+}
+
 /* PAGE SWITCHING */
 let cur='home';
 function goTo(id, filter){
   if(id===cur && !filter) return;
   document.getElementById('p-'+cur).classList.remove('active');
   document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('on',a.dataset.page===id));
+  document.querySelectorAll('.mmenu-links a').forEach(a=>a.classList.toggle('on',a.dataset.page===id));
   const pg=document.getElementById('p-'+id);
   pg.classList.add('active');
   pg.scrollTop=0;
@@ -1333,7 +1454,7 @@ homePg.addEventListener('scroll',()=>{
 /* CAROUSEL */
 const carData = [
   {name:'Clog Earplugs',        cat:'Branding · Social Media · OOH', pi:0},
-  {name:'SQuick',               cat:'Diseño · Branding',           pi:14},
+  {name:'Nesquik',              cat:'Publicidad · Social Media · OOH', pi:11},
   {name:'The Wall — Pink Floyd',cat:'Gráfica · Packaging · Merchandising', pi:1},
   {name:'Data Health',          cat:'Identidad Visual · Sobre · Tarjetas', pi:2},
   {name:'Tivoglio',             cat:'Manual de Marca · Redes Sociales', pi:3},

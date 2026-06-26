@@ -105,7 +105,7 @@ nav {
   transform:translateY(100%);
 }
 .hero-photo-layer img {
-  height:65%; width:auto; max-width:72vw;
+  height:88%; width:auto; max-width:none;
   display:block;
   user-select:none; -webkit-user-drag:none;
 }
@@ -686,6 +686,14 @@ nav {
 /* HOME DESC */
 .home-desc { padding:10vh 3rem 8vh; }
 
+/* HERO IMAGE CURSOR */
+#hero-img-cursor {
+  position:fixed; pointer-events:none; z-index:9995;
+  width:210px; height:145px;
+  background-size:cover; background-position:center;
+  opacity:0; transition:opacity .2s;
+}
+
 /* TICKER — ensure nowrap on items too */
 .ticker-item { white-space:nowrap; }
 .ticker-track { will-change:transform; }
@@ -804,6 +812,7 @@ nav {
 <div id="c-ring"></div>
 <div id="car-cursor-lbl">Ver proyecto →</div>
 <div id="proj-img-cursor"></div>
+<div id="hero-img-cursor"></div>
 
 <!-- NAV -->
 <nav>
@@ -998,8 +1007,8 @@ nav {
       <span class="f-name">Valentina Iglesias Bagu</span>
       <div class="f-links">
         <a href="mailto:vatuigle@gmail.com">Email</a>
-        <a href="#" target="_blank">Behance</a>
-        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.behance.net/valentiiglesia6" target="_blank">Behance</a>
+        <a href="https://www.linkedin.com/in/valentina-iglesias-bagu-1236b5358" target="_blank">LinkedIn</a>
         <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
       </div>
       <span class="f-loc">Buenos Aires · 2025</span>
@@ -1089,8 +1098,8 @@ nav {
       <span class="f-name">Valentina Iglesias Bagu</span>
       <div class="f-links">
         <a href="mailto:vatuigle@gmail.com">Email</a>
-        <a href="#" target="_blank">Behance</a>
-        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.behance.net/valentiiglesia6" target="_blank">Behance</a>
+        <a href="https://www.linkedin.com/in/valentina-iglesias-bagu-1236b5358" target="_blank">LinkedIn</a>
         <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
       </div>
       <span class="f-loc">Buenos Aires · 2025</span>
@@ -1167,8 +1176,8 @@ nav {
       <span class="f-name">Valentina Iglesias Bagu</span>
       <div class="f-links">
         <a href="mailto:vatuigle@gmail.com">Email</a>
-        <a href="#" target="_blank">Behance</a>
-        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.behance.net/valentiiglesia6" target="_blank">Behance</a>
+        <a href="https://www.linkedin.com/in/valentina-iglesias-bagu-1236b5358" target="_blank">LinkedIn</a>
         <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
       </div>
       <span class="f-loc">Buenos Aires · 2025</span>
@@ -1211,8 +1220,8 @@ nav {
       <span class="f-name">Valentina Iglesias Bagu</span>
       <div class="f-links">
         <a href="mailto:vatuigle@gmail.com">Email</a>
-        <a href="#" target="_blank">Behance</a>
-        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.behance.net/valentiiglesia6" target="_blank">Behance</a>
+        <a href="https://www.linkedin.com/in/valentina-iglesias-bagu-1236b5358" target="_blank">LinkedIn</a>
         <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
       </div>
       <span class="f-loc">Buenos Aires · 2025</span>
@@ -1258,11 +1267,11 @@ nav {
       <div class="cf-right" style="gap:2rem;">
         <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
           <p class="sec-lbl" style="margin-bottom:.3rem;">Behance</p>
-          <a href="#" target="_blank" class="c-link" style="font-weight:400;">behance.net/valentinaiglesias</a>
+          <a href="https://www.behance.net/valentiiglesia6" target="_blank" class="c-link" style="font-weight:400;">behance.net/valentiiglesia6</a>
         </div>
         <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
           <p class="sec-lbl" style="margin-bottom:.3rem;">LinkedIn</p>
-          <a href="#" target="_blank" class="c-link" style="font-weight:400;">linkedin.com/in/valentinaiglesias</a>
+          <a href="https://www.linkedin.com/in/valentina-iglesias-bagu-1236b5358" target="_blank" class="c-link" style="font-weight:400;">linkedin.com/in/valentina-iglesias-bagu</a>
         </div>
         <div style="border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:.6rem;">
           <p class="sec-lbl" style="margin-bottom:.3rem;">Instagram</p>
@@ -1278,8 +1287,8 @@ nav {
       <span class="f-name">Valentina Iglesias Bagu</span>
       <div class="f-links">
         <a href="mailto:vatuigle@gmail.com">Email</a>
-        <a href="#" target="_blank">Behance</a>
-        <a href="#" target="_blank">LinkedIn</a>
+        <a href="https://www.behance.net/valentiiglesia6" target="_blank">Behance</a>
+        <a href="https://www.linkedin.com/in/valentina-iglesias-bagu-1236b5358" target="_blank">LinkedIn</a>
         <a href="https://www.instagram.com/vatu.design/" target="_blank">Instagram</a>
       </div>
       <span class="f-loc">Buenos Aires · 2025</span>
@@ -1451,7 +1460,7 @@ homePg.addEventListener('scroll',()=>{
   heroPhoto.style.transform=`translateY(${(1-p1)*100}%)`;
 },{passive:true});
 
-/* CAROUSEL */
+/* CAROUSEL — infinite seamless loop */
 const carData = [
   {name:'Clog Earplugs',        cat:'Branding · Social Media · OOH', pi:0},
   {name:'Nesquik',              cat:'Publicidad · Social Media · OOH', pi:11},
@@ -1462,30 +1471,54 @@ const carData = [
   {name:'Air Coffee',           cat:'Sitio Web · Responsive · UI', pi:10},
 ];
 const carTrack=document.getElementById('carTrack');
-const carSlides=carTrack?carTrack.querySelectorAll('.car-slide'):[];
 const carNameEl=document.getElementById('carName');
 const carCatEl=document.getElementById('carCat');
 const carNumEl=document.getElementById('carNum');
 const carDotsEl=document.getElementById('carDots');
+const origSlides=carTrack?Array.from(carTrack.querySelectorAll('.car-slide')):[];
+const N=origSlides.length;
+// Clone first slide and append for seamless loop
+if(carTrack && N>0){
+  const clone=origSlides[0].cloneNode(true);
+  clone.addEventListener('click',()=>{lbOpen(carData[0].pi);carReset();if(carCurLbl)carCurLbl.style.opacity='0';});
+  carTrack.appendChild(clone);
+}
 let carCur=0;
+let carBusy=false;
 if(carDotsEl){
-  carSlides.forEach((_,i)=>{
+  origSlides.forEach((_,i)=>{
     const d=document.createElement('div');
     d.className='car-dot'+(i===0?' on':'');
-    d.onclick=()=>{carGo(i);carReset();};
+    d.onclick=()=>{if(!carBusy){carGo(i);carReset();}};
     carDotsEl.appendChild(d);
   });
 }
-function carGo(i){
-  carCur=(i+carSlides.length)%carSlides.length;
-  if(carTrack) carTrack.style.transform=`translateX(-${carCur*100}%)`;
-  if(carNameEl) carNameEl.textContent=carData[carCur].name;
-  if(carCatEl)  carCatEl.textContent=carData[carCur].cat;
-  if(carNumEl)  carNumEl.textContent=`${String(carCur+1).padStart(2,'0')} / ${String(carSlides.length).padStart(2,'0')}`;
-  document.querySelectorAll('.car-dot').forEach((d,j)=>d.classList.toggle('on',j===carCur));
+function carGo(rawI){
+  const displayIdx = rawI >= N ? 0 : rawI;
+  carCur = displayIdx;
+  if(carTrack){
+    carTrack.style.transition='transform .85s cubic-bezier(.77,0,.175,1)';
+    carTrack.style.transform=`translateX(-${rawI*100}%)`;
+  }
+  if(carNameEl) carNameEl.textContent=carData[displayIdx].name;
+  if(carCatEl)  carCatEl.textContent=carData[displayIdx].cat;
+  if(carNumEl)  carNumEl.textContent=`${String(displayIdx+1).padStart(2,'0')} / ${String(N).padStart(2,'0')}`;
+  document.querySelectorAll('.car-dot').forEach((d,j)=>d.classList.toggle('on',j===displayIdx));
+  // If we went to the clone, snap back silently
+  if(rawI >= N){
+    carBusy=true;
+    setTimeout(()=>{
+      if(carTrack){carTrack.style.transition='none';carTrack.style.transform='translateX(0)';}
+      carCur=0;
+      carBusy=false;
+    },870);
+  }
 }
 let carTimer;
-function carReset(){clearInterval(carTimer);carTimer=setInterval(()=>carGo(carCur+1),4000);}
+function carReset(){
+  clearInterval(carTimer);
+  carTimer=setInterval(()=>{if(!carBusy) carGo(carCur+1);},4000);
+}
 carReset();
 // carousel cursor label + click
 const carCurLbl=document.getElementById('car-cursor-lbl');
@@ -1588,6 +1621,37 @@ function lbOpen(pi){
 }
 function lbClose(){lbEl.classList.remove('open');}
 document.querySelectorAll('.proj-row').forEach(r=>r.addEventListener('click',()=>lbOpen(+r.dataset.p)));
+
+/* HERO NAME — cursor con imágenes de proyectos */
+const heroImgCursor=document.getElementById('hero-img-cursor');
+const heroNameLayer=document.querySelector('.hero-name-layer');
+const heroProjImgs=[
+  './images/24.jpg','./images/47.jpg','./images/39.jpg','./images/59.jpg',
+  './images/44.jpg','./images/10.jpg','./images/66.jpg','./images/55.jpg',
+  './images/71.jpg','./images/15.jpg','./images/76.jpg','./images/81.jpg',
+  './squick.png','./images/18.jpg'
+];
+let heroImgIdx=0, heroImgTimer=null;
+document.addEventListener('mousemove',e=>{
+  if(heroImgCursor){
+    heroImgCursor.style.left=(e.clientX+22)+'px';
+    heroImgCursor.style.top=(e.clientY-80)+'px';
+  }
+});
+if(heroNameLayer && heroImgCursor){
+  heroNameLayer.addEventListener('mouseenter',()=>{
+    heroImgCursor.style.backgroundImage=`url(${heroProjImgs[heroImgIdx]})`;
+    heroImgCursor.style.opacity='1';
+    heroImgTimer=setInterval(()=>{
+      heroImgIdx=(heroImgIdx+1)%heroProjImgs.length;
+      heroImgCursor.style.backgroundImage=`url(${heroProjImgs[heroImgIdx]})`;
+    },500);
+  });
+  heroNameLayer.addEventListener('mouseleave',()=>{
+    heroImgCursor.style.opacity='0';
+    clearInterval(heroImgTimer);
+  });
+}
 document.addEventListener('keydown',e=>{
   if(!lbEl.classList.contains('open'))return;
   if(e.key==='Escape')lbClose();
